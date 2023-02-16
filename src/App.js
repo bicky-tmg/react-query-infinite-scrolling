@@ -1,9 +1,11 @@
-import { useCallback, useRef } from "react";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
 import "./App.css";
 import Todo from "./Todo";
 
 function App() {
+  const { ref, inView } = useInView();
   const LIMIT = 10;
 
   const fetchTodos = async (page) => {
@@ -22,32 +24,18 @@ function App() {
       },
     });
 
-  const intObserver = useRef();
-  const lastTodoRef = useCallback(
-    (todo) => {
-      if (isFetchingNextPage) return;
-
-      if (intObserver.current) intObserver.current.disconnect();
-
-      intObserver.current = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && hasNextPage) {
-            fetchNextPage();
-          }
-        });
-      });
-
-      if (todo) intObserver.current.observe(todo);
-    },
-    [isFetchingNextPage, hasNextPage, fetchNextPage]
-  );
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
 
   const content =
     isSuccess &&
     data.pages.map((page) =>
       page.map((todo, i) => {
         if (page.length === i + 1) {
-          return <Todo ref={lastTodoRef} key={todo.id} todo={todo} />;
+          return <Todo ref={ref} key={todo.id} todo={todo} />;
         }
         return <Todo key={todo.id} todo={todo} />;
       })
