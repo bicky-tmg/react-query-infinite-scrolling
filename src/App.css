@@ -4,10 +4,14 @@
   grid-gap: 30px;
 }
 
-.article {
+.article,
+h3 {
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
+}
+
+.article {
   padding: 20px;
   border: 1px solid #edf2f5;
   border-radius: 10px;
@@ -25,4 +29,8 @@
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
+}
+
+.article p:not(:last-child) {
+  margin-bottom: 20px;
 }
