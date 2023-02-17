@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
-import "./App.css";
+import { useInView } from "react-intersection-observer";
 import Todo from "./Todo";
+import "./App.css";
 
 function App() {
   const { ref, inView } = useInView();
@@ -16,7 +16,7 @@ function App() {
   };
 
   const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery("posts", ({ pageParam = 1 }) => fetchTodos(pageParam), {
+    useInfiniteQuery("todos", ({ pageParam = 1 }) => fetchTodos(pageParam), {
       getNextPageParam: (lastPage, allPages) => {
         const nextPage =
           lastPage.length === LIMIT ? allPages.length + 1 : undefined;
